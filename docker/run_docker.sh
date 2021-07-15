@@ -32,27 +32,12 @@ else
         printf "${YELLOW}Attached to host network.\n"
         NETWORK_SETTING="--privileged --net=host"
     else
-        NETWORK_SETTING="-p 2222:2222"
+        NETWORK_SETTING=""
     fi
-fi
-
-XAUTH=/tmp/.docker.xauth
-if [ -d $XAUTH ]; then
-    sudo rm -rf $XAUTH
-fi
-if [ ! -f $XAUTH ]; then
-    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
-    touch $XAUTH
-    if [ ! -z "$xauth_list" ]; then
-        echo $xauth_list | xauth -f $XAUTH nmerge -
-    fi
-    chmod a+r $XAUTH
 fi
 
 # Allow root connect to xhost
 # xhost +si:localuser:root > /dev/null
-xhost +
-
 docker run -it --rm \
     --env="DISPLAY=$DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
