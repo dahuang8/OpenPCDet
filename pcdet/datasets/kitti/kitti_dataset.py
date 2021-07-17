@@ -171,6 +171,13 @@ class KittiDataset(DatasetTemplate):
 
             if has_label:
                 obj_list = self.get_label(sample_idx)
+                print('sample_idx: {}'.format(sample_idx))
+                if len(obj_list) == 0:
+                    print('sample_idx: {} has no label'.format(sample_idx))
+                    return info
+                else:
+                    print('sample_idx: {} has {} labels.'.format(sample_idx, len(obj_list)))
+
                 annotations = {}
                 annotations['name'] = np.array([obj.cls_type for obj in obj_list])
                 annotations['truncated'] = np.array([obj.truncation for obj in obj_list])
@@ -217,6 +224,7 @@ class KittiDataset(DatasetTemplate):
             return info
 
         sample_id_list = sample_id_list if sample_id_list is not None else self.sample_id_list
+        print('sample_id_list = {}'.format(sample_id_list))
         with futures.ThreadPoolExecutor(num_workers) as executor:
             infos = executor.map(process_single_scene, sample_id_list)
         return list(infos)

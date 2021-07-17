@@ -90,6 +90,13 @@ def main():
             load_data_to_gpu(data_dict)
             pred_dicts, _ = model.forward(data_dict)
 
+            ref_boxes=pred_dicts[0]['pred_boxes']
+            ref_scores=pred_dicts[0]['pred_scores']
+            ref_labels=pred_dicts[0]['pred_labels']
+
+            print('ref_boxes: {}\nref_scores: {}\nref_labels: {}'.format(ref_boxes, ref_scores, ref_labels))
+
+            # V.visualize_prediction(pred_dicts[0], demo_dataset.class_names, demo_dataset.root_path)
             # V.draw_scenes(
             #     points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
             #     ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
