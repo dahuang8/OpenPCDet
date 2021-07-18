@@ -1,6 +1,7 @@
 import argparse
 import glob
 from pathlib import Path
+import os
 
 # import mayavi.mlab as mlab
 import numpy as np
@@ -70,6 +71,8 @@ def parse_config():
 
 
 def main():
+    OUTPUT_FOLDER = './det_results'
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     args, cfg = parse_config()
     logger = common_utils.create_logger()
     logger.info('-----------------Quick Demo of OpenPCDet-------------------------')
@@ -83,6 +86,7 @@ def main():
     model.load_params_from_file(filename=args.ckpt, logger=logger, to_cpu=True)
     model.cuda()
     model.eval()
+    test_results = list()
     with torch.no_grad():
         for idx, data_dict in enumerate(demo_dataset):
             logger.info(f'Visualized sample index: \t{idx + 1}')
@@ -93,6 +97,13 @@ def main():
             ref_boxes=pred_dicts[0]['pred_boxes']
             ref_scores=pred_dicts[0]['pred_scores']
             ref_labels=pred_dicts[0]['pred_labels']
+
+            with open(os.path.join(OUTPUT_FOLDER, '{}.txt'.format(idx)), 'w') as f:
+                for i0, box in enumerate(ref_boxes):
+                    score = ref_scores[i0].item()
+                    label = ref_labels[i0].item()
+                    corners = [str(x.item()) for x in box]
+                    f.write('{} {} {}\n'.format(label, score, ' '.join(corners)))
 
             print('ref_boxes: {}\nref_scores: {}\nref_labels: {}'.format(ref_boxes, ref_scores, ref_labels))
 
