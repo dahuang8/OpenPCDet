@@ -32,3 +32,5 @@ RUN cd /tmp && git clone https://github.com/open-mmlab/OpenPCDet.git && \
     cd OpenPCDet && pip3 install -r requirements.txt
 
 RUN pip3 install vtk && pip3 install mayavi
+
+RUN bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"

@@ -1,4 +1,4 @@
-CLASS_NAMES: ['forklift', 'agv', 'pallet']
+CLASS_NAMES: ['forklift', 'pallet', 'agv']
 
 DATA_CONFIG:
     _BASE_CONFIG_: cfgs/dataset_configs/kitti_dataset.yaml
@@ -10,11 +10,11 @@ DATA_CONFIG:
               DB_INFO_PATH:
                   - kitti_dbinfos_train.pkl
               PREPARE: {
-                 filter_by_min_points: ['forklift:5', 'agv:5', 'pallet:5'],
+                 filter_by_min_points: ['forklift:10', 'pallet:5', 'agv:5'],
                  filter_by_difficulty: [-1],
               }
 
-              SAMPLE_GROUPS: ['forklift:15','agv:10', 'pallet:10']
+              SAMPLE_GROUPS: ['forklift:20','pallet:15', 'agv:15']
               NUM_POINT_FEATURES: 4
               DATABASE_WITH_FAKELIDAR: False
               REMOVE_EXTRA_WIDTH: [0.0, 0.0, 0.0]
@@ -63,7 +63,7 @@ MODEL:
         ANCHOR_GENERATOR_CONFIG: [
             {
                 'class_name': 'forklift',
-                'anchor_sizes': [[3.9, 1.6, 1.56]],
+                'anchor_sizes': [[1.2138, 3.4947, 2.1549]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [-1.78],
                 'align_center': False,
@@ -73,7 +73,7 @@ MODEL:
             },
             {
                 'class_name': 'pallet',
-                'anchor_sizes': [[0.8, 0.6, 1.73]],
+                'anchor_sizes': [[0.1425, 0.8023, 1.2132]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [-0.6],
                 'align_center': False,
@@ -83,7 +83,7 @@ MODEL:
             },
             {
                 'class_name': 'agv',
-                'anchor_sizes': [[1.76, 0.6, 1.73]],
+                'anchor_sizes': [[0.2635, 1.5606, 1.3024]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [-0.6],
                 'align_center': False,
@@ -105,7 +105,7 @@ MODEL:
             LOSS_WEIGHTS: {
                 'cls_weight': 1.0,
                 'loc_weight': 2.0,
-                'dir_weight': 0.2,
+                'dir_weight': 1.0,
                 'code_weights': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
             }
 
