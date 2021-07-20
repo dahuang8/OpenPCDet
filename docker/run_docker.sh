@@ -1,5 +1,5 @@
 #!/bin/bash
-DOCKER_IMAGE='openpcdet2'
+DOCKER_IMAGE='eternalblue7/openpcdet2'
 DOCKER_IMAGE_TAG='latest'
 DOCKER_VOLUME='openpcdet-vol'
 

@@ -73,7 +73,7 @@ MODEL:
             },
             {
                 'class_name': 'pallet',
-                'anchor_sizes': [[0.1425, 0.8023, 1.2132]],
+                'anchor_sizes': [[1.2132, 0.8023, 0.1425]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [-0.6],
                 'align_center': False,
@@ -83,7 +83,7 @@ MODEL:
             },
             {
                 'class_name': 'agv',
-                'anchor_sizes': [[0.2635, 1.5606, 1.3024]],
+                'anchor_sizes': [[1.0010, 0.7532, 0.3501]],
                 'anchor_rotations': [0, 1.57],
                 'anchor_bottom_heights': [-0.6],
                 'align_center': False,
