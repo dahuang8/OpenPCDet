@@ -2,6 +2,7 @@ import argparse
 import glob
 from pathlib import Path
 import os
+import math
 
 # import mayavi.mlab as mlab
 import numpy as np
@@ -100,15 +101,28 @@ def write_results(det, res_dir, class_names):
     print('{} results will be saved to {}'.format(len(det), res_dir))
     os.makedirs(res_dir, exist_ok=True)
     for i0, res in enumerate(det):
-        file_path = os.path.join(res_dir, '{:d}.txt'.format(i0))
+        file_path = os.path.join(res_dir, '{:06d}.txt'.format(i0))
         with open(file_path, 'w') as f:
             for i1 in range(len(res)):
-                box = res[i1]['box']
-                score = res[i1]['score']
+                box = res[i1]['bbox3d']
+                score = res[i1]['score'].item()
                 cls = class_names[res[i1]['label'] - 1]
-                f.write('{} {:f} '.format(cls, score))
-                for i2 in range(len(box)):
-                    f.write('{:f} '.format(box[i2]))
+                # TODO(khuang): use camera calib
+                # convert from normative to camera frame
+                x_n = box[0].item()
+                y_n = box[1].item()
+                z_n = box[2].item()
+                l_n = box[3].item()
+                w_n = box[4].item()
+                h_n = box[5].item()
+                r_n = box[6].item()
+                x_c = -y_n
+                y_c = -z_n
+                z_c = x_n
+                r_c = (-r_n - math.pi/2 + math.pi) % (math.pi * 2) - math.pi
+                alpha = np.arctan2(-x_c, z_c) # draw the frame, you'll understand this
+                # write in kitti format
+                f.write('{} 0.0 0 {:f} 0 0 0 0 {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f}'.format(cls, alpha, h_n, w_n, l_n, x_c, y_c, z_c, r_c, score))
                 f.write('\n')
 
 
@@ -140,6 +154,8 @@ def main():
             load_data_to_gpu(data_dict)
             pred_dicts, _ = model.forward(data_dict)
 
+            # note: these are in normative coordinates
+            # it will be converted to camera frame in write_results
             ref_boxes = pred_dicts[0]['pred_boxes']
             ref_scores = pred_dicts[0]['pred_scores']
             ref_labels = pred_dicts[0]['pred_labels']
@@ -149,7 +165,7 @@ def main():
             res_one_sample = list()
             for i in range(len(ref_boxes)):
                 res_one_sample.append({
-                    'box': ref_boxes[i],
+                    'bbox3d': ref_boxes[i],
                     'score': ref_scores[i],
                     'label': ref_labels[i]
                 })
