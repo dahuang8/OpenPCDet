@@ -23,12 +23,12 @@ if ! (docker volume list | grep -q ${DOCKER_VOLUME}); then
     fi
 fi
 
-if [[ $# -lt 1 ]]; then
-    echo "[Usage]: ./run_docker.sh PATH_TO_WS [host]"
+if [[ $# -lt 2 ]]; then
+    echo "[Usage]: ./run_docker.sh PATH_TO_WS PATH_TO_DATASET [host]"
     exit -1
 else
     printf "${GREEN}$1 is mapped to /midea_robot/ in docker.${NC}\n"
-    if [[ $# -eq 2 && $2 == "host" ]]; then
+    if [[ $# -eq 3 && $3 == "host" ]]; then
         printf "${YELLOW}Attached to host network.\n"
         NETWORK_SETTING="--privileged --net=host"
     else
@@ -47,6 +47,7 @@ docker run -it --rm \
     --volume="$XAUTH:$XAUTH" \
     --volume="${DOCKER_VOLUME}:/root" \
     --volume="$1:/midea_robot" \
+    --volume="$2:/data" \
     --privileged \
     --runtime=nvidia ${NETWORK_SETTING} \
     --workdir="/midea_robot" \
