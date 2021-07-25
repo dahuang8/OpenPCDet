@@ -14,6 +14,7 @@ from pcdet.models import build_network, load_data_to_gpu
 from pcdet.utils import common_utils
 # from visual_utils import visualize_utils as V
 
+CAMERA_HEIGHT = 1.5  # in meter
 
 class DemoDataset(DatasetTemplate):
     def __init__(self,
@@ -117,14 +118,13 @@ def write_results(det, res_dir, class_names):
                 h_n = box[5].item()
                 r_n = box[6].item()
                 x_c = -y_n
-                y_c = -z_n
+                y_c = -(z_n - h_n/2)
                 z_c = x_n
                 r_c = (-r_n - math.pi/2 + math.pi) % (math.pi * 2) - math.pi
                 alpha = np.arctan2(-x_c, z_c) # draw the frame, you'll understand this
                 # write in kitti format
                 f.write('{} 0.0 0 {:f} 0 0 0 0 {:f} {:f} {:f} {:f} {:f} {:f} {:f} {:f}'.format(cls, alpha, h_n, w_n, l_n, x_c, y_c, z_c, r_c, score))
                 f.write('\n')
-
 
 
 def main():
