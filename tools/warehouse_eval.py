@@ -48,7 +48,7 @@ def calculate_iou_2d(pred_box, gt_box):
     pb_center = np.mean(pb_corners, axis=1)
     gb_center = np.mean(gb_corners, axis=1)
     err_center = np.linalg.norm(pb_center - gb_center)
-    err_rot = (d_r - g_r) % math.pi
+    err_rot = (d_r - g_r + math.pi/2) % math.pi - math.pi/2
     return (iou, pb_corners.T, gb_corners.T, err_center, err_rot)
 
 
@@ -225,11 +225,14 @@ if __name__ == '__main__':
     err_center = eval_res['err_center']
     err_rot = eval_res['err_rot']
 
-    os.makedirs('/tmp/det_err', exist_ok=True)
+    det_err_dir = os.path.join(args.result_dir, 'det_err')
+    os.makedirs(det_err_dir, exist_ok=True)
 
     for c in CLASS_NAMES:
-        np.savetxt('/tmp/det_err/err_center_{}.csv'.format(c), err_center[c])
-        np.savetxt('/tmp/det_err/err_rot_{}.csv'.format(c), err_rot[c])
+        err_center_file = os.path.join(det_err_dir, 'err_center_{}.csv'.format(c))
+        err_rot_file = os.path.join(det_err_dir, 'err_rot_{}.csv'.format(c))
+        np.savetxt(err_center_file, err_center[c])
+        np.savetxt(err_rot_file, err_rot[c])
 
     for c in CLASS_NAMES:
         print('========== {} =========='.format(c))

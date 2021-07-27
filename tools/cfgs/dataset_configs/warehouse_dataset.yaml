@@ -1,7 +1,7 @@
 DATASET: 'KittiDataset'
-DATA_PATH: '/data/kitti'
+DATA_PATH: '../data/kitti'
 
-POINT_CLOUD_RANGE: [-10, -40, -3, 35.0, 40, 2.0]
+POINT_CLOUD_RANGE: [0, -40, -3, 35.0, 40, 2.5]
 
 DATA_SPLIT: {
     'train': train,
@@ -28,7 +28,7 @@ DATA_AUGMENTOR:
              filter_by_difficulty: [-1],
           }
 
-          SAMPLE_GROUPS: ['forklift:20','pallet:15', 'agv:15']
+          SAMPLE_GROUPS: ['forklift:20', 'pallet:15', 'agv:15']
           NUM_POINT_FEATURES: 4
           DATABASE_WITH_FAKELIDAR: False
           REMOVE_EXTRA_WIDTH: [0.0, 0.0, 0.0]
@@ -46,14 +46,14 @@ DATA_AUGMENTOR:
 
 POINT_FEATURE_ENCODING: {
     encoding_type: absolute_coordinates_encoding,
-    used_feature_list: ['x', 'y', 'z'],
-    src_feature_list: ['x', 'y', 'z'],
+    used_feature_list: ['x', 'y', 'z', 'intensity'],
+    src_feature_list: ['x', 'y', 'z', 'intensity'],
 }
 
 
 DATA_PROCESSOR:
     - NAME: mask_points_and_boxes_outside_range
-      REMOVE_OUTSIDE_BOXES: False
+      REMOVE_OUTSIDE_BOXES: True
 
     - NAME: shuffle_points
       SHUFFLE_ENABLED: {
