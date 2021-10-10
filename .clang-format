@@ -1,0 +1,8 @@
+---
+# We'll use defaults from the LLVM style, but with 4 columns indentation.
+BasedOnStyle: Google
+IndentWidth: 2
+---
+Language: Python
+# Use 100 columns for Python.
+ColumnLimit: 80

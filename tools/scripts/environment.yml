@@ -1,0 +1,14 @@
+name: pc_vis
+
+channels:
+ - pytorch
+ - defaults
+
+dependencies:
+ - python
+ - numpy
+ - matplotlib
+ - mayavi
+ - pytorch
+ - torchvision
+ - scipy
